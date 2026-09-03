@@ -1,36 +1,22 @@
-class LinkNode:
-    def __init__(self, value=0, next=None):
-        self.value = value 
-        self.next = next 
+def isSameTree(p, q):
+    if not p and not q:
+        return True 
 
-def reorder_list(head):
-    if not head or head.next is None:
-        return 
-    
-    slow = fast = head 
+    if not p or not q:
+        return False 
 
-    while fast and fast.next:
-        slow = slow.next 
-        fast = fast.next.next 
+    if p.value != q.value:
+        return False 
 
-    current, previous = slow.next, None 
-    slow.next = None 
+    return ((isSameTree(p.left, q.left)) and (isSameTree(p.right, q.right)))
 
-    while current:
-        next_node = current.next 
-        current.next = previous
-        previous = current
-        current = next_node
 
-    first, second= head, previous
+def isSubTree(root, subTree):
+    if not root:
+        return False 
 
-    while second:
-        tmp1 = first.next 
-        tmp2 = second.next 
+    if isSameTree(root, subTree):
+        return True 
 
-        first.next = previous
-        previous.next = tmp1
-
-        first = tmp1
-        second = tmp2
+    return ((isSubTree(root.left, subTree)) or (isSubTree(root.right, subTree)))
 
