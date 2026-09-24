@@ -1,22 +1,30 @@
-def isSameTree(p, q):
-    if not p and not q:
-        return True 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = None
 
-    if not p or not q:
-        return False 
+def build_trie(words):
+    root = TrieNode()
 
-    if p.value != q.value:
-        return False 
+    for word in words:
+        node = root 
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
 
-    return ((isSameTree(p.left, q.left)) and (isSameTree(p.right, q.right)))
+        node.word = word 
+    return root 
 
+def print_trie(node, prefix=""):
+    if node.word:
+        print(f"word found {node.word} -> prefix path ({prefix})")
 
-def isSubTree(root, subTree):
-    if not root:
-        return False 
+    for char, child in node.children.items():
+        print(f"{prefix} --> {char}")
+        print_trie(child, prefix + char)
 
-    if isSameTree(root, subTree):
-        return True 
+words = ['oath', 'car', 'goat']
+trie_node = build_trie(words)
 
-    return ((isSubTree(root.left, subTree)) or (isSubTree(root.right, subTree)))
-
+print_trie(trie_node)

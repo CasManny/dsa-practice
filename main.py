@@ -1,34 +1,54 @@
-from collections import deque
-def maximum_dept(root):
-    if not root:
-        return 0
-    
-    left = maximum_dept(root.left)
-    right = maximum_dept(root.right)
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = ""
 
-    return 1 + max(left, right)
+def build_tree(words):
+    root = TrieNode()
+    for word in words:
+        node = root 
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
 
-def solution(root):
+        node.word = word 
+    return root 
 
-    if not root:
-        return 0
+class Solution:
+    def find_word(board, words):
+        root = build_tree(words)
+        rows = len(board)
+        cols = len(board[0])
 
-    q = deque([root])
+        result = []
 
-    depth = 0
+        def dfs(r, c, node):
+            char = board[r][c]
+            if char not in node.children:
+                return 
 
-    while q:
-        level_level = len(q)
+            nxt = node.children[char]
+            if nxt.word:
+                result.append(nxt.word)
+                nxt.word = None 
 
-        for _ in range(level_level):
-            node = q.popleft()
+            board[r][c] = "#"
 
-            if node.left:
-                q.append(node.left)
-            if node.right:
-                q.append(node.right)
+            directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+            for dr, dc in directions:
+                nr = dr + r 
+                nc = dc + c 
 
-        depth += 1
+                if 0 <= nr < rows and 0 <= nc < cols and board[r][c] != "#":
+                    dfs(nr, nc, nxt)
+            board[r][c] = char 
 
-    return depth;
-            
+            if not nxt.children:
+                node.children.pop(char)
+
+        for r in range(rows):
+            for c in range(cols):
+                dfs(r, c, root)
+
+        return result
