@@ -14,9 +14,9 @@ def longestRepeatingChaReplacement(s, k):
 
         max_length = max(max_length, right - left + 1)
     return max_length
+
 s = "AABABBA"
 k = 1
-
 
 print(longestRepeatingChaReplacement(s,k))
 

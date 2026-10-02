@@ -1,54 +1,26 @@
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.word = ""
+def number_of_connected_component(numOfNodes, edges):
+    adj = { i: [] for i in range(numOfNodes)}
+    for u, v in edges:
+        adj[u].append(v)
+        adj[v].append(u)
 
-def build_tree(words):
-    root = TrieNode()
-    for word in words:
-        node = root 
-        for char in word:
-            if char not in node.children:
-                node.children[char] = TrieNode()
-            node = node.children[char]
+    visited = set()
 
-        node.word = word 
-    return root 
+    def dfs(node):
+        for neighbor in adj[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                dfs(neighbor)
 
-class Solution:
-    def find_word(board, words):
-        root = build_tree(words)
-        rows = len(board)
-        cols = len(board[0])
+    component = 0 
+    for i in range(numOfNodes):
+        if i not in visited:
+            visited.add(i)
+            dfs(i)
+            component += 1
 
-        result = []
+    return component
+n = 5
+edges = [[0,1], [1,2], [3,4]]
 
-        def dfs(r, c, node):
-            char = board[r][c]
-            if char not in node.children:
-                return 
-
-            nxt = node.children[char]
-            if nxt.word:
-                result.append(nxt.word)
-                nxt.word = None 
-
-            board[r][c] = "#"
-
-            directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-            for dr, dc in directions:
-                nr = dr + r 
-                nc = dc + c 
-
-                if 0 <= nr < rows and 0 <= nc < cols and board[r][c] != "#":
-                    dfs(nr, nc, nxt)
-            board[r][c] = char 
-
-            if not nxt.children:
-                node.children.pop(char)
-
-        for r in range(rows):
-            for c in range(cols):
-                dfs(r, c, root)
-
-        return result
+print(number_of_connected_component(n, edges))
