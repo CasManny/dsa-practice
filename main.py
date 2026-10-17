@@ -1,26 +1,24 @@
-def number_of_connected_component(numOfNodes, edges):
-    adj = { i: [] for i in range(numOfNodes)}
-    for u, v in edges:
-        adj[u].append(v)
-        adj[v].append(u)
+nums = [1, 1, 1, 2,2,2,2,2,4,5]
 
-    visited = set()
+def frequentKElement(nums, k):
+    count = {}
+    
+    freqMap = [[] for i in range(len(nums) + 1)]
 
-    def dfs(node):
-        for neighbor in adj[node]:
-            if neighbor not in visited:
-                visited.add(neighbor)
-                dfs(neighbor)
+    for num in nums:
+        count[num] = 1 + count.get(num, 0)
 
-    component = 0 
-    for i in range(numOfNodes):
-        if i not in visited:
-            visited.add(i)
-            dfs(i)
-            component += 1
+    for number, count in count.items():
+        freqMap[count].append(number)
 
-    return component
-n = 5
-edges = [[0,1], [1,2], [3,4]]
+    result = []
 
-print(number_of_connected_component(n, edges))
+    for i in range(len(nums) - 1, -1, -1):
+        for number in freqMap[i]:
+            result.append(number)
+            if len(result) == k:
+                return result
+
+print(frequentKElement(nums, 2))
+
+    

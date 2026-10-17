@@ -30,6 +30,6 @@ class Trie:
                 return False 
 
             node = node.children[ch]
-        return node.is_end_of_word;
+        return True
             
             
