@@ -1,24 +1,31 @@
-nums = [1, 1, 1, 2,2,2,2,2,4,5]
+from collections import deque
+def topologicalSort(vertices, edges):
+    adj = {v: [] for v in vertices}
+    in_degress = {v: 0 for v in vertices}
 
-def frequentKElement(nums, k):
-    count = {}
-    
-    freqMap = [[] for i in range(len(nums) + 1)]
+    for u, v in edges:
+        adj[u].append(v)
+        in_degress[v] += 1 
 
-    for num in nums:
-        count[num] = 1 + count.get(num, 0)
+    queue = deque([v for v in vertices if in_degress[v] == 0])
+    res = []
 
-    for number, count in count.items():
-        freqMap[count].append(number)
+    while queue:
+        node = queue.popleft()
+        res.append(node)
 
-    result = []
+        for neighbor in adj[node]:
+            in_degress[neighbor] -= 1
+            if in_degress[neighbor] == 0:
+                queue.append(neighbor)
 
-    for i in range(len(nums) - 1, -1, -1):
-        for number in freqMap[i]:
-            result.append(number)
-            if len(result) == k:
-                return result
+    if len(res) != len(vertices):
+        return "cycle found"
 
-print(frequentKElement(nums, 2))
+    return res
 
-    
+
+vertices = [0, 1, 2, 3, 4, 5]
+edges = [(5,2), (5, 0), (2,3), (3,1), (4,1), (4, 0)]
+
+print(*topologicalSort(vertices, edges))
